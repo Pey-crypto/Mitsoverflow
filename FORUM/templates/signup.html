@@ -90,7 +90,8 @@
 							<h1>Login</h1>
 						 </div>
 					</div>
-                   <form action="" method="post" name="login">
+                   <form action="/landing_page/" method="post" name="login">
+                        {% csrf_token %}
                            <div class="form-group">
                               <label for="exampleInputEmail1">Email address</label>
                               <input type="email" name="email"  class="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter email">
@@ -133,6 +134,7 @@
                            </div>
                         </div>
                         <form action="#" name="registration">
+                           {% csrf_token %}
                            <div class="form-group">
                               <label for="exampleInputEmail1">First Name</label>
                               <input type="text"  name="firstname" class="form-control" id="firstname" aria-describedby="emailHelp" placeholder="Enter Firstname">
