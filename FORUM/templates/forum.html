@@ -1,0 +1,272 @@
+{% extends 'base.html'%}
+
+{% block content %}
+<style>
+    a{
+        color: white;
+    }
+    .container
+    {
+        padding:30px 30px 0 30px ;
+    }
+    #home,#profile
+    {
+        background-color: white;
+    }
+    #myTabContent
+    {
+        width: 500px;
+    }
+    #first
+    {
+        margin-left: 0;
+    }
+</style>
+
+
+
+
+
+
+<div class="container">
+                    <h3 style="color: white;text-align: center;"><strong>FORUM: {{forum.topic}}</strong></h3>
+                    <br>
+                    {%if thread1 or thread2%}
+                        <table class="table">
+                            <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">Thread Name </th>
+                                <th scope="col">Description</th>
+                                <th scope="col">Posted on</th>
+                                <th>Reply</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {%for info in thread1%}
+                                <tr>
+                                    <td><a href="" style="font-size: 18px;" class="blue">{{info.topic}}</a></td>
+                                    <td> {{info.description}} </td>
+                                    <td> {{info.date_created}} </td>
+                                    {% if user.is_authenticated%}
+                                    <td> <button id={{info.tid}} onclick="openThread(this);" class="btn btn-outline-danger">Reply</button></td>
+                                    
+                                    <td> <button id={{info.tid}} onclick="delete_thread(this);" class="btn btn-outline-danger">X</button></td>
+                                    {%endif%}
+                                    
+                                </tr>
+                            {%endfor%}
+                            </tbody>
+                            <tbody>
+                                {%for info2 in thread2%}
+                                    <tr>
+                                        <td><a href="#" id={{info2.tid}} onclick="openThread(this);" style="font-size: 18px;">{{info2.topic}}</a></td>
+                                        <td> {{info2.description}} </td>
+                                        <td> {{info2.date_created}} </td>
+                                        {% if user.is_authenticated%}
+                                        <td> <button id={{info2.tid}} onclick="openThread(this);" class="btn btn-outline-danger">Reply</button></td>
+                                        {%endif%}
+                                        
+                                    </tr>
+                                {%endfor%}
+                                </tbody>
+                        </table>
+                    {%endif%}
+                {% if user.is_authenticated%}
+                    {%if checker%}
+                        <h3 class="float-left">
+                            <a href="#newModal" data-toggle="modal" id = {{forum.fid}} class="btn btn-danger" title="Add Thread" onclick = set_val(this)>
+                                Add Thread
+                           </a>
+                    
+                                
+                      
+                        <br><br>
+                    {%else%}
+
+                    <div class="card-body">
+                        <h3>You are not a member :( <a href="#nameModal" data-toggle="modal" class="btn btn-success" title="Add Thread" id={{forum.fid}} onclick="join_forum(this);">
+                            Join Forum
+                    </a></h3>
+                            
+                    </div>
+                    {%endif%}
+
+                    {%endif%} 
+                </div>
+                <button class="btn btn-danger" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Forum Details</button>
+
+                <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+                  <div class="offcanvas-header">
+                    <h5 id="offcanvasRightLabel">{{forum.topic}}</h5>
+                    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                  </div>
+                  <div class="offcanvas-body">
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item">
+                          <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Forum details</a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Members</a>
+                        </li>
+                      </ul>
+                      <div class="tab-content" id="myTabContent">
+                        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                            <br>
+                            <div class="col-8">
+                                <blockquote class="blockquote">
+                                    <p class="mb-0">{{forum.description}}</p>
+                                    <br>
+                                    <footer class="blockquote-footer">Created by <cite title="Source Title"> {{forum.name}}</cite></footer>
+                                  </blockquote>
+                          <br>
+                                
+                        </div>
+                        </div>
+                        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                            
+                            {%if member%}
+                            <ul class="list-group list-group-flush">
+                                {%for m in member%}
+                                <li class="list-group-item">{{m.name}}</li>
+                                {%endfor%}
+                            </ul>
+                            {%else%}
+                            <div class="card-body">
+                                <h1 class="card-title">No members yet </h1>
+                            </div>
+                            {%endif%}
+                                    
+                                </div>
+                            </div>
+                            <br><br>
+                            {%if checker%}
+                            <div class="float-left">
+                                <a href="#exitModal" data-toggle="modal" class="btn btn-danger" title="Add Thread" id={{forum.fid}} onclick="exit_forum(this);">
+                                    Exit Forum
+                            </a>
+                            </div>
+                            <br>
+                            {%else%}
+                            <div class="float-right">
+                                <a href="#nameModal" data-toggle="modal" class="btn btn-success" title="Add Thread" id={{forum.fid}} onclick="join_forum(this);">
+                                    Join Forum
+                            </a>
+                            </div>
+                            {%endif%}
+                  </div>
+                </div>
+                
+      
+
+  <div class="modal fade" id="newModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Provide Thread Details</h4>
+            </div>
+            <div class="modal-body">
+                <form method="POST" role="form">
+                    {%csrf_token%}
+                    <div class="form-group">
+                        <label for="name">Thread Name</label>
+                        <br>
+                            <input type="text" name="topic" id="topic">
+                    </div>
+                    <input type="number" name="forum_id" id="forum_id">
+                    <div class="form-group" >
+                        <label for="description">Description</label>
+                        <br>
+                            <textarea name="description" id="description" cols="30" rows="10"></textarea>
+                    </div>
+                    
+                   <button type="submit" formaction="{% url 'forum:new_thread' %}" class="btn btn-outline-danger">Submit</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="nameModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">What do you want to be called?</h4>
+            </div>
+            <div class="modal-body">
+                <form method="POST" role="form">
+                    {%csrf_token%}
+                    <div class="form-group">
+                        <label for="name">Preferred Display Name</label>
+                        <br>
+                            <input type="text" name="name1" id="name1">
+                    </div>
+                    <div class="form-group">
+                            <input type="number" name="forum_id1" id="forum_id1">
+                    </div>
+                    <button type="submit" formaction="{% url 'forum:join_forum' %}" class="btn btn-outline-danger">Submit</button>
+                </form>
+             
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>  
+<div class="modal fade" id="exitModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title"></h4>
+            </div>
+            <div class="modal-body">
+                <form method="POST" role="form">
+                    {%csrf_token%}
+                    <div class="form-group">
+                        <label for="name">Are you sure?</label>
+                    </div>
+                    <div class="form-group">
+                            <input type="number" name="forum_id2" id="forum_id2">
+                    </div>
+                    <button type="submit" formaction="{% url 'forum:exit_forum' %}" class="btn btn-outline-danger">Yes</button>
+                    <button type="button" class="btn btn-outline-danger" data-dismiss="modal">No</button>
+                </form>
+             
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>              
+
+    <script>
+        function openThread(what) {
+            
+            var m = what.id;
+            console.log(m);
+            document.location.href = "{% url 'forum:open_thread' 1234 %}".replace(/1234/, m.toString());
+        }
+        function delete_thread(what) {
+            
+            var m = what.id;
+            console.log(m);
+            document.location.href = "{% url 'forum:delete_thread' 1234 %}".replace(/1234/, m.toString());
+        }
+        function set_val(what) {
+            document.getElementById("forum_id").value = what.id;
+            document.getElementById("forum_id").style.display ="none";
+        }
+        function join_forum(what) {
+            document.getElementById("forum_id1").value = what.id;
+            document.getElementById("forum_id1").style.display ="none";
+        }
+        function exit_forum(what) {
+            document.getElementById("forum_id2").value = what.id;
+            document.getElementById("forum_id2").style.display ="none";
+        }
+    </script>
+
+ {% endblock %}   

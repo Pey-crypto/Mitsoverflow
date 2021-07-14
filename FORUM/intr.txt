@@ -1,0 +1,36 @@
+az postgres up --resource-group Engine_WORK --location westus2 --sku-name B_Gen5_1 --server-name mitsoverflowDe --database-name mitsoverflow --admin-user superuser1 --admin-password mIngMan1phra3k1fa1iv8 --ssl-enforcement Disabled
+Creating PostgreSQL Server 'mitsoverflowDe' in group 'Engine_WORK'...
+Creating PostgreSQL database 'mitsoverflow'...
+Checking your ip address...
+Configuring server firewall rule, 'devbox', to allow for your ip address: 103.70.196.208
+
+
+
+Use the credentials  if the below command is complicated
+
+If PostgreSQL server declines your IP address, please create a new firewall rule using:
+    `az postgres server firewall-rule create -g Engine_WORK -s mitsoverflowDe -n {rule_name} --start-ip-address {ip_address} --end-ip-address {ip_address}`
+
+
+
+
+Configuring server firewall rule, 'azure-access', to accept connections from all Azure resources...
+Successfully Connected to PostgreSQL.
+Ran Database Query: `CREATE USER root WITH ENCRYPTED PASSWORD 'Mitsoverflow1'`
+Ran Database Query: `GRANT ALL PRIVILEGES ON DATABASE mitsoverflow TO root`
+{
+  "connectionStrings": {
+    "ado.net": "Server=mitsoverflowde.postgres.database.azure.com;Database=mitsoverflow;Port=5432;User Id=superuser1@mitsoverflowDe;Password=mIngMan1phra3k1fa1iv8;",
+    "jdbc": "jdbc:postgresql://mitsoverflowde.postgres.database.azure.com:5432/mitsoverflow?user=superuser1@mitsoverflowDe&password=mIngMan1phra3k1fa1iv8",
+    "jdbc Spring": "spring.datasource.url=jdbc:postgresql://mitsoverflowde.postgres.database.azure.com:5432/mitsoverflow  spring.datasource.username=superuser1@mitsoverflowDe  spring.datasource.password=mIngMan1phra3k1fa1iv8",
+    "node.js": "var client = new pg.Client('postgres://superuser1@mitsoverflowDe:mIngMan1phra3k1fa1iv8@mitsoverflowde.postgres.database.azure.com:5432/mitsoverflow');",
+    "php": "host=mitsoverflowde.postgres.database.azure.com port=5432 dbname=mitsoverflow user=superuser1@mitsoverflowDe password=mIngMan1phra3k1fa1iv8",
+    "psql_cmd": "psql --host=mitsoverflowde.postgres.database.azure.com --port=5432 --username=superuser1@mitsoverflowDe --dbname=mitsoverflow",
+    "python": "cnx = psycopg2.connect(database='mitsoverflow', user='superuser1@mitsoverflowDe', host='mitsoverflowde.postgres.database.azure.com', password='mIngMan1phra3k1fa1iv8', port='5432')",
+    "ruby": "cnx = PG::Connection.new(:host => 'mitsoverflowde.postgres.database.azure.com', :user => 'superuser1@mitsoverflowDe', :dbname => 'mitsoverflow', :port => '5432', :password => 'mIngMan1phra3k1fa1iv8')",
+    "webapp": "Database=mitsoverflow; Data Source=mitsoverflowde.postgres.database.azure.com; User Id=superuser1@mitsoverflowDe; Password=mIngMan1phra3k1fa1iv8"
+  },
+  "host": "mitsoverflowde.postgres.database.azure.com",
+  "password": "mIngMan1phra3k1fa1iv8",
+  "username": "superuser1@mitsoverflowDe"
+}

@@ -1,0 +1,95 @@
+
+{% extends 'base.html'%}
+
+{% block content %}
+<style>
+    .container
+    {
+        padding:30px;
+    }
+</style>
+<div class="container">
+{% if thread %}
+<div class="card">
+    <div class="card-header">
+        <h3>Topic : {{thread.topic}}</h3>
+    </div>
+    <div class="card-body">
+      <blockquote class="blockquote mb-0">
+        <p>{{thread.description}}</p>
+        <footer class="blockquote-footer">{{thread.name}}<cite title="Source Title"></cite></footer>
+      </blockquote>
+    </div>
+  </div>
+
+  {%endif%}
+  <br>
+
+{% if r1 or r2 %}
+<h4 style="color: white;">Other Replies:</h4>
+{% for i in r1 %}
+<ul class="list-group list-group-flush">
+    <li class="list-group-item"><blockquote class="blockquote">
+        <p class="mb-0">{{i.reply}}</p><br>
+        <footer class="blockquote-footer">{{i.name}}<cite title="Source Title"></cite></footer>
+        <br>
+        <button id={{i.repid}} onclick="delete_reply(this);" class="btn btn-outline-danger">Delete Reply</button>
+      </blockquote>
+    <hr></li>
+  </ul>
+  {%endfor%}
+  {% for i in r2 %}
+<ul class="list-group list-group-flush">
+    <li class="list-group-item"><blockquote class="blockquote">
+        <p class="mb-0">{{i.reply}}</p>
+        <footer class="blockquote-footer">{{i.name}}<cite title="Source Title"></cite></footer>
+      </blockquote></li>
+  </ul>
+  {%endfor%}
+{%endif%}
+<br>
+<div class="col-lg-3">
+    <a href="#newModal" data-toggle="modal" class="btn btn-secondary btn-lg btn-block" id = "{{thread.tid}}" name = "{{thread.tid}}" onclick="set_val(this);">
+         REPLY
+    </a>
+</div>
+<div class="modal fade" id="newModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title"></h4>
+            </div>
+            <div class="modal-body">
+                <form method="POST">
+                    {%csrf_token%}
+                    <div class="form-group">
+                    <label for="exampleFormControlTextarea1">Your answer: </label>
+                    <textarea class="form-control" id="exampleFormControlTextarea1" name="reply" rows="3"></textarea>
+                    </div>
+                    <input type="text" class="form-control"  name ="thread_id" id = "thread_id">
+                    
+                    <button type="submit" formaction="{% url 'forum:reply' %}" class="btn btn-outline-danger">Submit</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<script>
+    function set_val(what)
+    {
+        document.getElementById("thread_id").value = what.id;
+        document.getElementById("thread_id").readOnly = true;
+        document.getElementById("thread_id").style.display ="none";
+    }
+    function delete_reply(what) {
+            
+            var m = what.id;
+            console.log(m);
+            document.location.href = "{% url 'forum:delete_reply' 1234 %}".replace(/1234/, m.toString());
+        }
+</script>
+{%endblock%}

@@ -1,65 +1,41 @@
 {% extends 'base.html'%}
 
 {% block content %}
-<style>
-    a{
-        color: white;
-    }
-    .title
-    {
-        padding: 150px;
-        text-align: center;
-        color: white;
-        height: 500px;
-        width: 100%;
-        background-image: url("https://png.pngtree.com/thumb_back/fw800/back_our/20190623/ourmid/pngtree-red-black-business-atmosphere-business-card-background-image_239813.jpg");
-        background-repeat: no-repeat;
-        background-size: cover;
-    }
-</style>
-<div class="title">
-    <h1>MITSOverflow</h1><br>
-        <a href="#newModal" data-toggle="modal" class="btn btn-danger" title="Add Thread">
-             Make a new Forum
-        </a>
-</div>
         <div class="container">
             <div class="row">
                 <div class="col-lg-12 col-lg-offset-0">
                 <div class="card-body">
-                    <h3 class="card-title" style="color: white;text-align: center;"><strong>EXISTING FORUMS</strong></h1>
+                        <h1 class="card-title">Posts</h1>
                 </div>
                 {% if user.is_authenticated%}
-               
-                    <br>
-                    <br>
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <a href="#newModal" data-toggle="modal" class="btn btn-primary" title="Add Thread">
+                                 Make a new Thread
+                            </a>
+                        </div>
+                    </div>
                 {%endif%}
                 {%if item%}
                 <table class="table">
-                    <thead class="thead-dark">
+                    <thead>
                       <tr>
-                        <th scope="col">Forum Name</th>
-                        <th scope="col">Creator</th>
+                        <th scope="col">Name</th>
                         <th scope="col">Description</th>
-                        <th scope="col">Created on</th>
+                        <th scope="col">Last Post</th>
                         <th scope="col">Privacy</th>
-                        {% if user.is_authenticated%}
                         <th>Reply</th>
-                        {%endif%}
                       </tr>
                     </thead>
                     <tbody>
                     {%for info in item%}
                       <tr>
-                        <td><a href="#" id={{info.fid}} onclick="open_forum(this);" style="font-size: 18px;">{{info.topic}}</a></td>
-                        <td> {{info.name}} </td>
+                        <td><a href="{{info.link}}" style="font-size: 18px;" class="blue">{{info.name}}</a></td>
                         <td> {{info.description}} </td>
                         <td> {{info.date_created}} </td>
                         <td>{{info.privacy}}</td>
                         {% if user.is_authenticated%}
-                        <td><a class="btn btn-outline-danger" id={{info.fid}} onclick="open_forum(this);">
-                            View Forum
-                       </a> </td>
+                        <td> <button id={{info.tid}} onclick="openThread(this);" class="btn btn-primary">Reply</button></td>
                         {%endif%}
                         
                     </tr>
@@ -75,22 +51,16 @@
                     <h4 class="modal-title"></h4>
                 </div>
                 <div class="modal-body">
-                    <form method="POST" role="form">
-                        {%csrf_token%}
+                    <form action="" method="POST" role="form">
                         <div class="form-group">
-                            <label for="name">Display Name</label>
+                            <label for="ForumName">Title</label>
                             <br>
-                                <input type="text" name="name" id="name">
-                        </div>
-                        <div class="form-group">
-                            <label for="name">Thread Name</label>
-                            <br>
-                                <input type="text" name="topic" id="topic">
+                                <input type="text" id="ForumName" name = "ForumName" minlength="3"><br><br>
                         </div>
                         <div class="form-group" >
                             <label for="description">Description</label>
                             <br>
-                                <textarea name="description" id="description" cols="30" rows="10"></textarea>
+                            <input type="text" id="description" name = "description" size="20px"><br><br>
                         </div>
                         <div class="form-group" >
                         
@@ -101,10 +71,11 @@
                             <label for="Public">Public</label>
                             <input type="radio" id="Public" value="Public" name="privacy">
                         </div>
-                        <button type="submit" formaction="{% url 'forum:new_forum' %}" class="btn btn-outline-danger">Submit</button>
                         
+                        <button type="submit" formaction="{% url 'forum:new_forum' %}" class="btn btn-primary">
+                            {% csrf_token %}
+                            Submit</button>
                     </form>
-                 
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -112,14 +83,11 @@
             </div>
         </div>
     </div>
-
-    
     <script>
-        function open_forum(what) {
-            
+        function openThread(what) {
             var m = what.id;
             console.log(m);
-            document.location.href = "{% url 'forum:open_forum' 1234 %}".replace(/1234/, m.toString());
+            document.location.href = "{% url 'forum:open_thread' 1234 %}".replace(/1234/, m.toString());
         }
     </script>
 
