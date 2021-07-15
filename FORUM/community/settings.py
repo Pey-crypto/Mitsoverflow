@@ -12,9 +12,8 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 from pathlib import Path
 import os
-import pymysql
+import psycopg2
 
-pymysql.install_as_MySQLdb()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -81,12 +80,12 @@ WSGI_APPLICATION = 'community.wsgi.application'
 
 DATABASES = {
     'default': {
-       'ENGINE': 'django.db.backends.mysql',
+       'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'mitsoverflow',
-        'HOST': 'localhost',
-        'PORT': '3306',
-        'USER': 'root',
-        'PASSWORD': 'root',
+        'HOST': 'blingname.postgres.database.azure.com',
+        'PORT': '5432',
+        'USER': 'superuser1@blingname',
+        'PASSWORD': 'mIngMan1phra3k1fa1iv8',
     }
 }
 
@@ -100,7 +99,7 @@ LOGGING = {
     },
     'root': {
         'handlers': ['console'],
-        'level': 'INFO',
+        'level': 'DEBUG',
     },
 }
 

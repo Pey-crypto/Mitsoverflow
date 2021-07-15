@@ -18,37 +18,51 @@
     }
 </style>
 <div class="title">
+    {% if user.is_authenticated %}
     <h1>MITSOverflow</h1><br>
         <a href="#newModal" data-toggle="modal" class="btn btn-danger" title="Add Thread">
              Make a new Forum
         </a>
+    {% else %}
+    <p class="text-center" >Looks like you are new here</p>
+    <a href="{% url 'register' %}" data-toggle="modal" class="btn btn-danger" title="Add Thread">
+            Register
+    </a>
+    {% endif %}
+        
 </div>
         <div class="container">
             <div class="row">
                 <div class="col-lg-12 col-lg-offset-0">
-                <div class="card-body">
+                    {% if user.is_authenticated%}
+                    <div class="card-body">
                     <h3 class="card-title" style="color: white;text-align: center;"><strong>EXISTING FORUMS</strong></h1>
-                </div>
-                {% if user.is_authenticated%}
-               
+                    </div>
                     <br>
                     <br>
+                    {%else%}
+                    <div class="card-body">
+                        <p style="color: white;text-align: center;">
+                            MITSOverflow is a community for MITS students to share information and ask questions.<br>
+                            1.Register using your MITS ID
+                        </p>
                 {%endif%}
                 {%if item%}
+                {% if user.is_authenticated%}
                 <table class="table">
                     <thead class="thead-dark">
-                      <tr>
+                        <tr>
                         <th scope="col">Forum Name</th>
                         <th scope="col">Creator</th>
                         <th scope="col">Description</th>
                         <th scope="col">Created on</th>
                         <th scope="col">Privacy</th>
-                        {% if user.is_authenticated%}
                         <th>Reply</th>
                         {%endif%}
                       </tr>
                     </thead>
                     <tbody>
+                {% if user.is_authenticated%}
                     {%for info in item%}
                       <tr>
                         <td><a href="#" id={{info.fid}} onclick="open_forum(this);" style="font-size: 18px;">{{info.topic}}</a></td>
@@ -56,14 +70,14 @@
                         <td> {{info.description}} </td>
                         <td> {{info.date_created}} </td>
                         <td>{{info.privacy}}</td>
-                        {% if user.is_authenticated%}
+                      
                         <td><a class="btn btn-outline-danger" id={{info.fid}} onclick="open_forum(this);">
                             View Forum
                        </a> </td>
-                        {%endif%}
-                        
+                       {%endfor%}
+                       {%endif%}    
                     </tr>
-                    {%endfor%}
+              
                     </tbody>
                   </table>
                 {%endif%}
